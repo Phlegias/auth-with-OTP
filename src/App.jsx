@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css"
+import { signIn } from "./api/signin";
+import { auth } from "./api/auth";
 
 const App = () => {
 	const [otp, setOtp] = useState("");
@@ -33,23 +35,24 @@ const App = () => {
 		if (phoneNumber.length === 11) {
 			setShowOTP(true);
 			setIncorrectPhoneNumber(false);
-			//sendFunc(); post /api/auth/otp
+			auth(phoneNumber); //api/auth/otp
 		} else
 			setIncorrectPhoneNumber(true);
 	};
 
 	// function to resend OTP 
 	const resendOTP = () => {
-		//sendFunc(); post /api/auth/otp
+		auth(phoneNumber);
 		setOtpCooldown(true);
 		setMinutes(0);
 		setSeconds(10);
 	};
 
+	// enter in account & check OTP
 	const check = () => {
 		if (otp.length === 6) {
 			setIncorrectOTP(false);
-			//enterFunc(); /api/users/signin
+			signIn(phoneNumber, otp); //api/users/signin
 		} else 
 			setIncorrectOTP(true);
 		
@@ -72,7 +75,7 @@ const App = () => {
 		return () => {
 			clearInterval(interval);
 		};
-	}, [seconds]);
+	}, [seconds, minutes]);
 
 
 	return (
@@ -92,7 +95,7 @@ const App = () => {
 				{incorrectPhoneNumber ? <span>	Неверно указан номер телефона</span> : <></>}
 			</div>
 			
-			
+
 			{showOTP ? 
 				(<>
 					<div className="OtpField">
@@ -106,10 +109,7 @@ const App = () => {
 						{incorrectOTP ? <span>	Неверно указан код</span> : <></>}
 					</div>
 					
-					{/*сюда дописать API*/}
-					
-
-					<div className="signin">
+					<div className="blue-button">
 						<button
 							onClick={check}
 						>
@@ -135,9 +135,9 @@ const App = () => {
 
 						
 					</div>
-					
 				</>) :
-				(<div className="auth">
+
+				(<div className="blue-button">
 					<button
 						onClick={sendOtpMessage}
 					>

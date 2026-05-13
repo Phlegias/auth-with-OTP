@@ -59,7 +59,7 @@ button {
 	color: #FFFFFF
 }
 
-.auth, .signin button:hover {
+.blue-button button:hover {
 	background-color: #0052CC;
 }
 
